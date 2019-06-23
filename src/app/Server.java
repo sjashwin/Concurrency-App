@@ -6,7 +6,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 
 class Server {
-    private int PORT = 7771;
+    private static int PORT = 7771;
     private ServerSocket server;
     private ArrayList<Socket> clientBucket;
     
@@ -19,21 +19,20 @@ class Server {
             System.err.println("Error stating server: " + err.getMessage());
             System.exit(0);
         }finally{
+            clientBucket = new ArrayList<Socket>();
             /*
                 Adds a shutdown hook to make sure that server socket has been closed.
                 This runs a separate thread.
             */
-            clientBucket = new ArrayList<Socket>();
-            Runtime.getRuntime().addShutdownHook(new Thread(){
-                public void run(){
+            Runtime.getRuntime().addShutdownHook(new Thread(()->{
                     try{
                         server.close();
                         System.out.println("Server has stopped successfully");
                     }catch(IOException err){
                         System.err.println("Server could not be stopped"+err.getMessage());
                     }
-                }
-            });
+                })
+            );
         }
         while(true){
                 Socket client = listenPort();

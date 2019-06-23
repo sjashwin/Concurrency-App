@@ -21,16 +21,16 @@ class Client extends Thread{
                 Adds a runtime shoutdown hook to make sure the connection socket
                 is closed and not left open. If left open can cause error when re-connecting.
             */
-            Runtime.getRuntime().addShutdownHook(new Thread(){
-                public void run(){
+            Runtime.getRuntime().addShutdownHook(
+                new Thread(()->{
                     try{
                         socket.close();
                         System.out.println("Client has closed");
                     }catch(IOException err){
-                        System.out.println("Could not close client"+ err.getMessage());
+                        System.out.println("Could not close client:"+ err.getMessage());
                     }
-                }
-            });
+                })
+            );
         }
     }
 
@@ -38,7 +38,7 @@ class Client extends Thread{
         /*
             Business logic for client goes here
         */
-        System.out.println("Client is running"+Double.toString(Thread.currentThread().getId()));
+        System.out.println("Client is running: "+Double.toString(Thread.currentThread().getId()));
     }
 
     public static void main(String args[]){
